@@ -10,6 +10,8 @@
 		481D705B281B908200109A3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D705A281B908200109A3B /* AppDelegate.swift */; };
 		481D705D281B908400109A3B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 481D705C281B908400109A3B /* Assets.xcassets */; };
 		481D7060281B908400109A3B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 481D705E281B908400109A3B /* MainMenu.xib */; };
+		481D7068281B919B00109A3B /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D7067281B919B00109A3B /* MainWindow.swift */; };
+		481D706A281B91CA00109A3B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D7069281B91CA00109A3B /* MainView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +20,8 @@
 		481D705C281B908400109A3B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		481D705F281B908400109A3B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		481D7061281B908400109A3B /* Metal_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Metal_macOS.entitlements; sourceTree = "<group>"; };
+		481D7067281B919B00109A3B /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
+		481D7069281B91CA00109A3B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +55,8 @@
 			isa = PBXGroup;
 			children = (
 				481D705A281B908200109A3B /* AppDelegate.swift */,
+				481D7067281B919B00109A3B /* MainWindow.swift */,
+				481D7069281B91CA00109A3B /* MainView.swift */,
 				481D705C281B908400109A3B /* Assets.xcassets */,
 				481D705E281B908400109A3B /* MainMenu.xib */,
 				481D7061281B908400109A3B /* Metal_macOS.entitlements */,
@@ -128,6 +134,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				481D7068281B919B00109A3B /* MainWindow.swift in Sources */,
+				481D706A281B91CA00109A3B /* MainView.swift in Sources */,
 				481D705B281B908200109A3B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
