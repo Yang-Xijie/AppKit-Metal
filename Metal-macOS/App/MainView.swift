@@ -10,35 +10,7 @@ class MainView: NSView {
     convenience init() {
         self.init(frame: .zero)
 
-        renderView = {
-            let rv = MTKView()
-
-            // MARK: device
-
-            guard let defaultDevice = MTLCreateSystemDefaultDevice() else {
-                XCLog(.fatal, "Metal is not supported on this device")
-                fatalError()
-            }
-            rv.device = defaultDevice
-
-            // MARK: render method
-
-            rv.preferredFramesPerSecond = 60
-            rv.isPaused = false
-            rv.enableSetNeedsDisplay = false
-            rv.autoResizeDrawable = false
-
-            // MARK: delegate
-
-            guard let tempRenderer = RenderViewDelegate(renderView: rv) else {
-                XCLog(.fatal, "Renderer failed to initialize")
-                fatalError()
-            }
-            renderViewDelegate = tempRenderer // neccessary
-            rv.delegate = renderViewDelegate
-
-            return rv
-        }()
+        renderView = RenderView()
         addSubview(renderView)
         renderView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

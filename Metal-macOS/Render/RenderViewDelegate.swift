@@ -20,8 +20,8 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         do {
             pipelineState_drawTriangleStripWithSingleColor = try buildRenderPipelineWith(
                 device: device, metalKitView: renderView,
-                vertexFuncName: "vertexShader_drawTriangleStripWithSingleColor",
-                fragmentFuncName: "fragmentShader_drawTriangleStripWithSingleColor"
+                vertexFuncName: "vertexShader_drawTriangles",
+                fragmentFuncName: "fragmentShader_drawTriangles"
             )
         } catch {
             XCLog(.fatal, "Unable to compile render pipeline state: \(error)")

@@ -8,7 +8,7 @@ struct VertexOut {
 };
 
 vertex VertexOut
-vertexShader_drawTriangleStripWithSingleColor(
+vertexShader_drawTriangles(
 	const device VertexIn *vertexArray[[buffer(0)]],
 	unsigned int vid[[vertex_id]]){
 	// MARK: get data from buffers
@@ -24,7 +24,7 @@ vertexShader_drawTriangleStripWithSingleColor(
 }
 
 fragment MetalRGBA
-fragmentShader_drawTriangleStripWithSingleColor(
+fragmentShader_drawTriangles(
 	VertexOut in[[stage_in]]) {
 	return in.color;
 }

@@ -1,14 +1,12 @@
-import Cocoa
 import Metal
 import MetalKit
 import XCLog
 
 class RenderView: MTKView {
-    private var renderViewDelegate: RenderViewDelegate!
-    
-    convenience init(){
-        self.init()
-        
+    var renderViewDelegate: RenderViewDelegate!
+
+    convenience init() {
+        self.init(frame: .zero) // should not call `self.init()` which will call `convenience init()` and go into a infinite loop
 
         // MARK: device
 
@@ -16,13 +14,14 @@ class RenderView: MTKView {
             XCLog(.fatal, "Metal is not supported on this device")
             fatalError()
         }
-        self.device = defaultDevice
+        device = defaultDevice
 
         // MARK: render method
 
-        self.preferredFramesPerSecond = 60
-        self.isPaused = false
-        self.enableSetNeedsDisplay = false
+        preferredFramesPerSecond = 60
+        isPaused = false
+        enableSetNeedsDisplay = false
+        autoResizeDrawable = false
 
         // MARK: delegate
 
@@ -30,7 +29,7 @@ class RenderView: MTKView {
             XCLog(.fatal, "Renderer failed to initialize")
             fatalError()
         }
-        renderViewDelegate = tempRenderer // neccessary
-        self.delegate = renderViewDelegate
+        renderViewDelegate = tempRenderer
+        delegate = renderViewDelegate
     }
 }
