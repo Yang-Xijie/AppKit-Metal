@@ -9,11 +9,6 @@ class MainView: NSView {
 
     convenience init() {
         self.init(frame: .zero)
-        wantsLayer = true
-        layer?.backgroundColor = CGColor(red: CGFloat(0x66) / 255,
-                                         green: CGFloat(0xCC) / 255,
-                                         blue: CGFloat(0xFF) / 255,
-                                         alpha: 1.0)
 
         renderView = {
             let rv = MTKView()
@@ -29,10 +24,9 @@ class MainView: NSView {
             // MARK: render method
 
             rv.preferredFramesPerSecond = 60
-            rv.isPaused = false // No need for `rv.preferredFramesPerSecond = 120`. It will be automatically decided by device.
-            rv.enableSetNeedsDisplay = false // when Apple Pencil or finger strokes, call `draw()` to render a drawable
-            rv.autoResizeDrawable = false // set `renderView.drawableSize` by ourselves
-            rv.presentsWithTransaction = false
+            rv.isPaused = false
+            rv.enableSetNeedsDisplay = false
+            rv.autoResizeDrawable = false
 
             // MARK: delegate
 
@@ -45,14 +39,11 @@ class MainView: NSView {
 
             return rv
         }()
-        // not `view.addSubView()` because the scrollView should be on the top to recieve user's gesture
-        // notice: renderView.frame is relative to scrollContentView
         addSubview(renderView)
         renderView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             renderView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
             renderView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-
             renderView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
             renderView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
         ])

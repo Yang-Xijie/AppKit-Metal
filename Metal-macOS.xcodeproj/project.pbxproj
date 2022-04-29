@@ -12,10 +12,12 @@
 		481D7060281B908400109A3B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 481D705E281B908400109A3B /* MainMenu.xib */; };
 		481D7068281B919B00109A3B /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D7067281B919B00109A3B /* MainWindow.swift */; };
 		481D706A281B91CA00109A3B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D7069281B91CA00109A3B /* MainView.swift */; };
-		481D7091281B990400109A3B /* MTLRenderPipelineState+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D708E281B990400109A3B /* MTLRenderPipelineState+.swift */; };
+		481D7091281B990400109A3B /* Metal+buildRenderPipelineWith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D708E281B990400109A3B /* Metal+buildRenderPipelineWith.swift */; };
 		481D7092281B990400109A3B /* RenderViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D708F281B990400109A3B /* RenderViewDelegate.swift */; };
-		481D7093281B990400109A3B /* Shader_triangleStrip.metal in Sources */ = {isa = PBXBuildFile; fileRef = 481D7090281B990400109A3B /* Shader_triangleStrip.metal */; };
+		481D7093281B990400109A3B /* Shader_triangle.metal in Sources */ = {isa = PBXBuildFile; fileRef = 481D7090281B990400109A3B /* Shader_triangle.metal */; };
 		481D7096281B992C00109A3B /* XCLog in Frameworks */ = {isa = PBXBuildFile; productRef = 481D7095281B992C00109A3B /* XCLog */; };
+		481D709A281BA21500109A3B /* RenderData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D7099281BA21500109A3B /* RenderData.swift */; };
+		481D709C281BA30400109A3B /* RenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D709B281BA30400109A3B /* RenderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,9 +30,12 @@
 		481D7069281B91CA00109A3B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		481D708A281B98FD00109A3B /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		481D708C281B990400109A3B /* ShaderDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDefinitions.h; sourceTree = "<group>"; };
-		481D708E281B990400109A3B /* MTLRenderPipelineState+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MTLRenderPipelineState+.swift"; sourceTree = "<group>"; };
+		481D708E281B990400109A3B /* Metal+buildRenderPipelineWith.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Metal+buildRenderPipelineWith.swift"; sourceTree = "<group>"; };
 		481D708F281B990400109A3B /* RenderViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderViewDelegate.swift; sourceTree = "<group>"; };
-		481D7090281B990400109A3B /* Shader_triangleStrip.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shader_triangleStrip.metal; sourceTree = "<group>"; };
+		481D7090281B990400109A3B /* Shader_triangle.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shader_triangle.metal; sourceTree = "<group>"; };
+		481D7097281BA18D00109A3B /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		481D7099281BA21500109A3B /* RenderData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderData.swift; sourceTree = "<group>"; };
+		481D709B281BA30400109A3B /* RenderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +53,7 @@
 		481D704E281B908200109A3B = {
 			isa = PBXGroup;
 			children = (
+				481D7097281BA18D00109A3B /* TODO.md */,
 				481D7059281B908200109A3B /* Metal-macOS */,
 				481D7058281B908200109A3B /* Products */,
 			);
@@ -64,6 +70,7 @@
 		481D7059281B908200109A3B /* Metal-macOS */ = {
 			isa = PBXGroup;
 			children = (
+				481D7098281BA1FA00109A3B /* Data */,
 				481D7088281B98E700109A3B /* App */,
 				481D708B281B990400109A3B /* Render */,
 				481D7089281B98F000109A3B /* Bridge */,
@@ -80,6 +87,7 @@
 				481D705A281B908200109A3B /* AppDelegate.swift */,
 				481D7067281B919B00109A3B /* MainWindow.swift */,
 				481D7069281B91CA00109A3B /* MainView.swift */,
+				481D709B281BA30400109A3B /* RenderView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -96,9 +104,9 @@
 			isa = PBXGroup;
 			children = (
 				481D708C281B990400109A3B /* ShaderDefinitions.h */,
-				481D708D281B990400109A3B /* Extensions */,
 				481D708F281B990400109A3B /* RenderViewDelegate.swift */,
-				481D7090281B990400109A3B /* Shader_triangleStrip.metal */,
+				481D7090281B990400109A3B /* Shader_triangle.metal */,
+				481D708D281B990400109A3B /* Extensions */,
 			);
 			path = Render;
 			sourceTree = "<group>";
@@ -106,9 +114,17 @@
 		481D708D281B990400109A3B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				481D708E281B990400109A3B /* MTLRenderPipelineState+.swift */,
+				481D708E281B990400109A3B /* Metal+buildRenderPipelineWith.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		481D7098281BA1FA00109A3B /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				481D7099281BA21500109A3B /* RenderData.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,9 +206,11 @@
 				481D7068281B919B00109A3B /* MainWindow.swift in Sources */,
 				481D706A281B91CA00109A3B /* MainView.swift in Sources */,
 				481D7092281B990400109A3B /* RenderViewDelegate.swift in Sources */,
-				481D7093281B990400109A3B /* Shader_triangleStrip.metal in Sources */,
+				481D7093281B990400109A3B /* Shader_triangle.metal in Sources */,
+				481D709A281BA21500109A3B /* RenderData.swift in Sources */,
 				481D705B281B908200109A3B /* AppDelegate.swift in Sources */,
-				481D7091281B990400109A3B /* MTLRenderPipelineState+.swift in Sources */,
+				481D709C281BA30400109A3B /* RenderView.swift in Sources */,
+				481D7091281B990400109A3B /* Metal+buildRenderPipelineWith.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

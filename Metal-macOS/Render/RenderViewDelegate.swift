@@ -3,35 +3,6 @@ import Metal
 import MetalKit
 import XCLog
 
-class RenderData {
-    static let shared = RenderData()
-
-    var triangles: [Triangle] = [Triangle(pointA: VertexIn(position: MetalPosition2(0, 0.5),
-                                                           color: MetalRGBA(0.5, 0.5, 0.5, 0.5)),
-                                          pointB: VertexIn(position: MetalPosition2(-0.5, 0),
-                                                           color: MetalRGBA(0.5, 0.5, 0.5, 0.5)),
-                                          pointC: VertexIn(position: MetalPosition2(0.5, 0),
-                                                           color: MetalRGBA(0.5, 0.5, 0.5, 0.5))),
-    ]
-
-    var vertices: [VertexIn] {
-        var result: [VertexIn] = []
-        _ = triangles.map({ triangle in
-            result.append(contentsOf: triangle.vertices)
-        })
-        return result
-    }
-}
-
-struct Triangle {
-    var pointA: VertexIn
-    var pointB: VertexIn
-    var pointC: VertexIn
-    var vertices: [VertexIn] {
-        [pointA, pointB, pointC]
-    }
-}
-
 class RenderViewDelegate: NSObject, MTKViewDelegate {
     let renderView: MTKView!
 
@@ -58,8 +29,8 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         }
 
         for _ in 0 ..< MaxFramesInFlight {
-            vertexBuffer.append(device.makeBuffer(bytes: RenderData.shared.triangles,
-                                                  length: RenderData.shared.triangles.count * MemoryLayout<VertexIn>.stride,
+            vertexBuffer.append(device.makeBuffer(bytes: RenderData.shared.vertices,
+                                                  length: RenderData.shared.vertices.count * MemoryLayout<VertexIn>.stride,
                                                   options: [])!)
         }
     }
@@ -90,13 +61,15 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
 
         let currentVertexBufferAddr = vertexBuffer[_currentBuffer].contents()
         let currentVertexBufferData = RenderData.shared.vertices
-        currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.triangles.count)
+        currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.vertices.count)
 
         renderEncoder.setVertexBuffer(vertexBuffer[_currentBuffer],
                                       offset: 0,
                                       index: 0)
 
-        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: RenderData.shared.triangles.count * 3)
+        renderEncoder.drawPrimitives(type: .triangle,
+                                     vertexStart: 0,
+                                     vertexCount: RenderData.shared.vertices.count)
 
         // MARK: commit
 

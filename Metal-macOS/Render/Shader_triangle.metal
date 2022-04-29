@@ -7,12 +7,10 @@ struct VertexOut {
 	MetalRGBA color;
 };
 
-/// draw triangleStrips with a single color
 vertex VertexOut
 vertexShader_drawTriangleStripWithSingleColor(
 	const device VertexIn *vertexArray[[buffer(0)]],
-    unsigned int vid[[vertex_id]]){
-
+	unsigned int vid[[vertex_id]]){
 	// MARK: get data from buffers
 
 	VertexIn in = vertexArray[vid];
@@ -25,7 +23,6 @@ vertexShader_drawTriangleStripWithSingleColor(
 	return out;
 }
 
-// check `5.2.3.4 Fragment Function Input Attributes`
 fragment MetalRGBA
 fragmentShader_drawTriangleStripWithSingleColor(
 	VertexOut in[[stage_in]]) {
