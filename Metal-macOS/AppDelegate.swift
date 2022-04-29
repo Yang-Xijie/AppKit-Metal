@@ -10,7 +10,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.center()
     }
 
-    func applicationWillTerminate(_ aNotification: Notification) {}
+    func applicationWillTerminate(_ aNotification: Notification) { }
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
