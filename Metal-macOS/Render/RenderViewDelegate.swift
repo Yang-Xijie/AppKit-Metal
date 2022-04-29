@@ -6,32 +6,42 @@ import XCLog
 class RenderData {
     static let shared = RenderData()
 
-    var all_shapes: [ExShape] = []
+    var triangles: [Triangle] = [Triangle(pointA: VertexIn(position: MetalPosition2(0, 0.5),
+                                                           color: MetalRGBA(0.5, 0.5, 0.5, 0.5)),
+                                          pointB: VertexIn(position: MetalPosition2(-0.5, 0),
+                                                           color: MetalRGBA(0.5, 0.5, 0.5, 0.5)),
+                                          pointC: VertexIn(position: MetalPosition2(0.5, 0),
+                                                           color: MetalRGBA(0.5, 0.5, 0.5, 0.5))),
+    ]
 
-    var vertices_triangleStrips: [VertexIn] = []
+    var vertices: [VertexIn] {
+        var result: [VertexIn] = []
+        _ = triangles.map({ triangle in
+            result.append(contentsOf: triangle.vertices)
+        })
+        return result
+    }
+}
 
-    var indexBytes: [UInt32] = []
-
-    var instanceIndexStart: UInt32 = 0
-    var shapeNumer = 0
+struct Triangle {
+    var pointA: VertexIn
+    var pointB: VertexIn
+    var pointC: VertexIn
+    var vertices: [VertexIn] {
+        [pointA, pointB, pointC]
+    }
 }
 
 class RenderViewDelegate: NSObject, MTKViewDelegate {
     let renderView: MTKView!
-
-    let document: ExNoteDocument!
-    let scrollView: UIScrollView!
 
     let device: MTLDevice
     let commandQueue: MTLCommandQueue
 
     let pipelineState_drawTriangleStripWithSingleColor: MTLRenderPipelineState
 
-    init?(renderView: MTKView, document: ExNoteDocument, scrollView: UIScrollView) {
+    init?(renderView: MTKView) {
         self.renderView = renderView
-
-        self.document = document
-        self.scrollView = scrollView
 
         device = renderView.device!
         commandQueue = device.makeCommandQueue()!
@@ -48,13 +58,9 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         }
 
         for _ in 0 ..< MaxFramesInFlight {
-            vertexBuffer.append(device.makeBuffer(bytes: RenderData.shared.vertices_triangleStrips,
-                                                  length: RenderData.shared.vertices_triangleStrips.count * MemoryLayout<VertexIn>.stride,
+            vertexBuffer.append(device.makeBuffer(bytes: RenderData.shared.triangles,
+                                                  length: RenderData.shared.triangles.count * MemoryLayout<VertexIn>.stride,
                                                   options: [])!)
-            indexBuffer.append(device.makeBuffer(bytes: RenderData.shared.indexBytes,
-                                                 length: RenderData.shared.indexBytes.count * MemoryLayout<UInt32>.stride,
-                                                 options: [])!)
-            transformConfigBuffer.append(TransfromConfig(documentSize: .zero, scrollViewContentSize: .zero, scrollViewContentOffset: .zero, renderViewFrameSize: .zero, scrollViewZoomScale: 1.0))
         }
     }
 
@@ -62,8 +68,6 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
     let MaxFramesInFlight = 3
     var _currentBuffer = 0
     var vertexBuffer: [MTLBuffer] = []
-    var indexBuffer: [MTLBuffer] = []
-    var transformConfigBuffer: [TransfromConfig] = []
 
     // MARK: draw
 
@@ -85,36 +89,14 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         renderEncoder.setTriangleFillMode(.fill)
 
         let currentVertexBufferAddr = vertexBuffer[_currentBuffer].contents()
-        let currentVertexBufferData = RenderData.shared.vertices_triangleStrips
-        currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.vertices_triangleStrips.count)
-
-        let currentIndexBufferAddr = indexBuffer[_currentBuffer].contents()
-        let currentIndexBufferData = RenderData.shared.indexBytes
-        currentIndexBufferAddr.initializeMemory(as: UInt32.self, from: currentIndexBufferData, count: RenderData.shared.indexBytes.count)
-
-        // transform from documentCoordinate to metalNormCoordinate
-        // FIXME: sceneDidBecomeActive变卡可能是有些东西没算出来 获取不到 然后就丢了几帧 然后一直卡
-        let transformConfig = TransfromConfig(documentSize: [document.size.width, document.size.height],
-                                              scrollViewContentSize: [Float(scrollView.contentSize.width), Float(scrollView.contentSize.height)],
-                                              scrollViewContentOffset: [Float(scrollView.contentOffset.x), Float(scrollView.contentOffset.y)],
-                                              renderViewFrameSize: [Float(renderView.frame.width), Float(renderView.frame.height)],
-                                              scrollViewZoomScale: Float(scrollView.zoomScale))
-
-        transformConfigBuffer[_currentBuffer] = transformConfig
+        let currentVertexBufferData = RenderData.shared.vertices
+        currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.triangles.count)
 
         renderEncoder.setVertexBuffer(vertexBuffer[_currentBuffer],
                                       offset: 0,
                                       index: 0)
-        renderEncoder.setVertexBytes(&transformConfigBuffer[_currentBuffer],
-                                     length: MemoryLayout<TransfromConfig>.stride,
-                                     index: 1) // transformConfig is smaller than 4KB
 
-        renderEncoder.drawIndexedPrimitives(type: .triangleStrip,
-                                            indexCount: RenderData.shared.indexBytes.count,
-                                            indexType: .uint32,
-                                            indexBuffer: indexBuffer[_currentBuffer],
-                                            indexBufferOffset: 0,
-                                            instanceCount: 1) // only one instance
+        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: RenderData.shared.triangles.count * 3)
 
         // MARK: commit
 
