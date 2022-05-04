@@ -21,7 +21,7 @@ class RenderView: MTKView {
         preferredFramesPerSecond = 60
         isPaused = false
         enableSetNeedsDisplay = false
-        autoResizeDrawable = false
+        autoResizeDrawable = true // 和机器的缩放比例相适应
 
         // MARK: delegate
 

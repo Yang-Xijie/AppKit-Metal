@@ -45,24 +45,24 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
     func draw(in view: MTKView) {
         _currentBuffer = (_currentBuffer + 1) % MaxFramesInFlight
 
-        // MARK: preparation
+        // MARK: -
 
         guard let commandBuffer = commandQueue.makeCommandBuffer() else { return }
+
+        // MARK: -
+
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1, 1, 1, 1) // white background
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
 
-        // MARK: create data
-
-        // MARK: create buffer and set draw primitive
-
         renderEncoder.setRenderPipelineState(pipelineState_drawTriangleStripWithSingleColor)
         renderEncoder.setTriangleFillMode(.fill)
+
+        // MARK: -
 
         let currentVertexBufferAddr = vertexBuffer[_currentBuffer].contents()
         let currentVertexBufferData = RenderData.shared.vertices
         currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.vertices.count)
-
         renderEncoder.setVertexBuffer(vertexBuffer[_currentBuffer],
                                       offset: 0,
                                       index: 0)
@@ -70,10 +70,10 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         renderEncoder.drawPrimitives(type: .triangle,
                                      vertexStart: 0,
                                      vertexCount: RenderData.shared.vertices.count)
-
-        // MARK: commit
-
         renderEncoder.endEncoding()
+
+        // MARK: -
+
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
     }
