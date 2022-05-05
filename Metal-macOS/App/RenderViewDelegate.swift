@@ -4,46 +4,47 @@ import MetalKit
 import XCLog
 
 class RenderViewDelegate: NSObject, MTKViewDelegate {
-    let renderView: MTKView!
+    // MARK: members
 
-    let device: MTLDevice
-    let commandQueue: MTLCommandQueue
-
-    let pipelineState_drawTriangleStripWithSingleColor: MTLRenderPipelineState
+    private let renderView: MTKView!
+    private let device: MTLDevice!
+    private let commandQueue: MTLCommandQueue!
+    private let pipelineState: MTLRenderPipelineState
+    // flight
+    private let MAX_FRAMES_IN_FLIGHT = 3
+    private var vertexBufferIndex = 0
+    private var vertexBuffer: [MTLBuffer] = []
 
     init?(renderView: MTKView) {
-        self.renderView = renderView
+        // MARK: setup
 
+        self.renderView = renderView
         device = renderView.device!
         commandQueue = device.makeCommandQueue()!
-
         do {
-            pipelineState_drawTriangleStripWithSingleColor = try buildRenderPipelineWith(
+            pipelineState = try buildRenderPipelineWith(
                 device: device, metalKitView: renderView,
                 vertexFuncName: "vertexShader_drawTriangles",
                 fragmentFuncName: "fragmentShader_drawTriangles"
             )
         } catch {
             XCLog(.fatal, "Unable to compile render pipeline state: \(error)")
-            return nil
+            fatalError()
         }
 
-        for _ in 0 ..< MaxFramesInFlight {
+        // MARK: preapare data
+
+        for _ in 0 ..< MAX_FRAMES_IN_FLIGHT {
             vertexBuffer.append(device.makeBuffer(bytes: RenderData.shared.vertices,
                                                   length: RenderData.shared.vertices.count * MemoryLayout<VertexIn>.stride,
                                                   options: [])!)
         }
     }
 
-    // flight
-    let MaxFramesInFlight = 3
-    var _currentBuffer = 0
-    var vertexBuffer: [MTLBuffer] = []
-
     // MARK: draw
 
     func draw(in view: MTKView) {
-        _currentBuffer = (_currentBuffer + 1) % MaxFramesInFlight
+        vertexBufferIndex = (vertexBufferIndex + 1) % MAX_FRAMES_IN_FLIGHT
 
         // MARK: -
 
@@ -55,15 +56,15 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1, 1, 1, 1) // white background
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
 
-        renderEncoder.setRenderPipelineState(pipelineState_drawTriangleStripWithSingleColor)
+        renderEncoder.setRenderPipelineState(pipelineState)
         renderEncoder.setTriangleFillMode(.fill)
 
         // MARK: -
 
-        let currentVertexBufferAddr = vertexBuffer[_currentBuffer].contents()
+        let currentVertexBufferAddr = vertexBuffer[vertexBufferIndex].contents()
         let currentVertexBufferData = RenderData.shared.vertices
         currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.vertices.count)
-        renderEncoder.setVertexBuffer(vertexBuffer[_currentBuffer],
+        renderEncoder.setVertexBuffer(vertexBuffer[vertexBufferIndex],
                                       offset: 0,
                                       index: 0)
 

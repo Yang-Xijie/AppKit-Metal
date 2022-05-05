@@ -4,13 +4,13 @@ import MetalKit
 import XCLog
 
 class MainView: NSView {
-    var renderView: MTKView!
-    var renderViewDelegate: RenderViewDelegate!
+    private var renderView: MTKView!
 
     convenience init() {
         self.init(frame: .zero)
 
         renderView = RenderView()
+        
         addSubview(renderView)
         renderView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

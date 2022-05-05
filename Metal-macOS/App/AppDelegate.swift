@@ -2,15 +2,21 @@ import Cocoa
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var window: MainWindow!
+    // MARK: - members
+
+    private var mainWindow: MainWindow!
+
+    // MARK: - behaviors
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        window = MainWindow()
-        window.makeKeyAndOrderFront(self)
-        window.center()
+        mainWindow = MainWindow()
+        mainWindow.makeKeyAndOrderFront(self)
+        mainWindow.center()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) { }
+
+    // MARK: config
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true

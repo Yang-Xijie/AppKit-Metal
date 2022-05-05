@@ -1,6 +1,8 @@
 import Cocoa
 
 class MainWindow: NSWindow {
+    // MARK: - members
+
     private var mainView: MainView!
 
     convenience init() {
