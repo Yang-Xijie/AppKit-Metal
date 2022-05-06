@@ -5,7 +5,7 @@ let test_color = MetalRGBA(Float(0x66) / 255, Float(0xCC) / 255, Float(0xFF) / 2
 class RenderData {
     static let shared = RenderData()
 
-    var triangles: [Triangle] = [Triangle(pointA: VertexIn(position: MetalPosition2(-1, 1),
+    var triangles: [Triangle] = [Triangle(pointA: VertexIn(position: MetalPosition2(0, 0),
                                                            color: test_color),
                                           pointB: VertexIn(position: MetalPosition2(-1, 0),
                                                            color: test_color),

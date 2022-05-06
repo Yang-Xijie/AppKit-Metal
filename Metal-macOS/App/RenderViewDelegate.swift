@@ -35,9 +35,9 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         // MARK: preapare data
 
         for _ in 0 ..< MAX_FRAMES_IN_FLIGHT {
-            vertexBuffer.append(device.makeBuffer(bytes: RenderData.shared.vertices,
-                                                  length: RenderData.shared.vertices.count * MemoryLayout<VertexIn>.stride,
-                                                  options: [])!)
+            // TODO: 这里应该给够内存 虽然刚刚好也是够
+            vertexBuffer.append(
+                device.makeBuffer(length: RenderData.shared.vertices.count * MemoryLayout<VertexIn>.stride)!)
         }
     }
 
@@ -52,6 +52,7 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
 
         // MARK: -
 
+        // FIXME: 这一部分的代码每帧都要吗？感觉加载一下数据就可以了
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1, 1, 1, 1) // white background
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
@@ -61,6 +62,7 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
 
         // MARK: -
 
+        // FIXME: 如果输入的点不变的话其实是没必要更新的 如果点数要变的话 地址空间的大小也要变的
         let currentVertexBufferAddr = vertexBuffer[vertexBufferIndex].contents()
         let currentVertexBufferData = RenderData.shared.vertices
         currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.vertices.count)

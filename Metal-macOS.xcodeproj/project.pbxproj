@@ -73,6 +73,7 @@
 				481D7088281B98E700109A3B /* App */,
 				481D7098281BA1FA00109A3B /* Data */,
 				481D708B281B990400109A3B /* Render */,
+				483096D628252BE1008ADE16 /* Extensions */,
 				481D7089281B98F000109A3B /* Bridge */,
 				481D705C281B908400109A3B /* Assets.xcassets */,
 				481D705E281B908400109A3B /* MainMenu.xib */,
@@ -106,17 +107,8 @@
 			children = (
 				481D708C281B990400109A3B /* ShaderDefinitions.h */,
 				481D7090281B990400109A3B /* Shader_triangle.metal */,
-				481D708D281B990400109A3B /* Extensions */,
 			);
 			path = Render;
-			sourceTree = "<group>";
-		};
-		481D708D281B990400109A3B /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				481D708E281B990400109A3B /* Metal+buildRenderPipelineWith.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		481D7098281BA1FA00109A3B /* Data */ = {
@@ -125,6 +117,14 @@
 				481D7099281BA21500109A3B /* RenderData.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		483096D628252BE1008ADE16 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				481D708E281B990400109A3B /* Metal+buildRenderPipelineWith.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
