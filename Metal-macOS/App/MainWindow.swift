@@ -1,4 +1,5 @@
 import Cocoa
+import XCLog
 
 class MainWindow: NSWindow {
     // MARK: - members
@@ -17,9 +18,23 @@ class MainWindow: NSWindow {
         contentView = mainView
 
         title = CONFIG.WINDOW.title
-        contentMinSize = NSSize(width: CONFIG.WINDOW.min_height * CONFIG.WINDOW.width_height_ratio,
-                                height: CONFIG.WINDOW.min_height)
+        collectionBehavior = [.managed, .fullScreenPrimary, .fullScreenDisallowsTiling]
         contentAspectRatio = NSSize(width: CONFIG.WINDOW.width_height_ratio,
                                     height: CGFloat(1.0))
+        contentMinSize = NSSize(width: CONFIG.WINDOW.min_height * CONFIG.WINDOW.width_height_ratio,
+                                height: CONFIG.WINDOW.min_height)
+        // setting contentMaxSize instead of maxFullScreenContentSize will be better
+        if NSScreen.main!.frame.size.width / NSScreen.main!.frame.size.height >= CONFIG.WINDOW.width_height_ratio {
+            contentMaxSize = NSSize(width: NSScreen.main!.frame.size.height * CONFIG.WINDOW.width_height_ratio,
+                                    height: NSScreen.main!.frame.size.height)
+        } else {
+            contentMaxSize = NSSize(width: NSScreen.main!.frame.size.width,
+                                    height: NSScreen.main!.frame.size.width / CONFIG.WINDOW.width_height_ratio)
+        }
+    }
+
+    override func toggleFullScreen(_: Any?) {
+        XCLog("Entered full screen.")
+        super.toggleFullScreen(self) // FIXME: pause rendering before enter full screen and continue rendering after full screen
     }
 }
