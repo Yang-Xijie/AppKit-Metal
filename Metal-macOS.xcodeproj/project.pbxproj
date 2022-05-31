@@ -42,6 +42,8 @@
 		48A701442845B8320047733C /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		48A701462845D2210047733C /* ErrorDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDescription.swift; sourceTree = "<group>"; };
 		48A701492845D2D40047733C /* NSPoint+inNSRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPoint+inNSRect.swift"; sourceTree = "<group>"; };
+		48A7014B2845DA960047733C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		48A7014D2845DB350047733C /* render-layers.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "render-layers.md"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +61,9 @@
 		481D704E281B908200109A3B = {
 			isa = PBXGroup;
 			children = (
+				48A7014B2845DA960047733C /* README.md */,
 				481D7097281BA18D00109A3B /* TODO.md */,
+				48A7014C2845DB1F0047733C /* Dcos */,
 				481D7059281B908200109A3B /* Metal-macOS */,
 				481D7058281B908200109A3B /* Products */,
 			);
@@ -142,6 +146,14 @@
 				48A701462845D2210047733C /* ErrorDescription.swift */,
 			);
 			path = Constants;
+			sourceTree = "<group>";
+		};
+		48A7014C2845DB1F0047733C /* Dcos */ = {
+			isa = PBXGroup;
+			children = (
+				48A7014D2845DB350047733C /* render-layers.md */,
+			);
+			path = Dcos;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

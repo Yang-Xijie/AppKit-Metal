@@ -1,0 +1,23 @@
+# Render Layers
+
+- Touch Feedback
+    - sakura in Majoul-Soul
+    - blue beams in Blue Archive
+- Video
+    - a full-screen video to play
+- Interface Effects
+    - reward game items
+    - get a new character
+- Guide
+    - "click here to start a new game"
+    - highlight single element
+- Interface Elements
+    - start button
+    - mini map
+    - progress bar
+- 2D/3D Scene
+    - Skill Effects
+    - Game Objects
+    - Terrain & Sky Box
+- Drawable Color
+    - black or white
