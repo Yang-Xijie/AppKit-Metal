@@ -16,14 +16,13 @@ class RenderData {
                                           pointB: VertexIn(position: MetalPosition2(1, 0),
                                                            color: test_color),
                                           pointC: VertexIn(position: MetalPosition2(0, -1),
-                                                           color: test_color)),
-    ]
+                                                           color: test_color))]
 
     var vertices: [VertexIn] {
         var result: [VertexIn] = []
-        _ = triangles.map({ triangle in
+        _ = triangles.map { triangle in
             result.append(contentsOf: triangle.vertices)
-        })
+        }
         return result
     }
 }

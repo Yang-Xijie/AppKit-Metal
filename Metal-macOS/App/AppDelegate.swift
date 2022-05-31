@@ -1,4 +1,5 @@
 import Cocoa
+import XCLog
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -8,17 +9,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - behaviors
 
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
+    func applicationDidFinishLaunching(_: Notification) {
         mainWindow = MainWindow()
         mainWindow.makeKeyAndOrderFront(self)
         mainWindow.center()
     }
 
-    func applicationWillTerminate(_ aNotification: Notification) { }
+    func applicationWillTerminate(_: Notification) {
+        XCLog("Quit.")
+    }
 
     // MARK: config
 
-    func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+    func applicationSupportsSecureRestorableState(_: NSApplication) -> Bool {
         return true
     }
 

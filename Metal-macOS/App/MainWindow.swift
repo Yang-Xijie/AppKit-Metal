@@ -7,7 +7,8 @@ class MainWindow: NSWindow {
 
     convenience init() {
         self.init(contentRect: NSRect(origin: .zero,
-                                      size: Self.defaultContentSize),
+                                      size: NSSize(width: CONFIG.WINDOW.default_height * CONFIG.WINDOW.width_height_ratio,
+                                                   height: CONFIG.WINDOW.default_height)),
                   styleMask: [.titled, .closable, .miniaturizable, .resizable],
                   backing: .buffered,
                   defer: true)
@@ -15,21 +16,10 @@ class MainWindow: NSWindow {
         mainView = MainView()
         contentView = mainView
 
-        title = Self.windowTitle
-        contentMinSize = Self.minContentSize
-        contentAspectRatio = Self.defaultContentSize
+        title = CONFIG.WINDOW.title
+        contentMinSize = NSSize(width: CONFIG.WINDOW.min_height * CONFIG.WINDOW.width_height_ratio,
+                                height: CONFIG.WINDOW.min_height)
+        contentAspectRatio = NSSize(width: CONFIG.WINDOW.width_height_ratio,
+                                    height: CGFloat(1.0))
     }
-
-    // MARK: - config
-
-    private static let windowTitle = "Metal macOS"
-
-    private static let contentWidthHeightRatio = CGFloat(16.0 / 9.0)
-
-    private static let defaultContentHeight = CGFloat(360.0)
-    private static let defaultContentSize = NSSize(width: defaultContentHeight * contentWidthHeightRatio,
-                                                   height: defaultContentHeight)
-    private static let minContentHeight = CGFloat(180.0)
-    private static let minContentSize = NSSize(width: minContentHeight * contentWidthHeightRatio,
-                                               height: minContentHeight)
 }

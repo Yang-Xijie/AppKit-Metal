@@ -1,7 +1,6 @@
 import Cocoa
 import Metal
 import MetalKit
-import XCLog
 
 class MainView: NSView {
     private var renderView: MTKView!
@@ -10,7 +9,7 @@ class MainView: NSView {
         self.init(frame: .zero)
 
         renderView = RenderView()
-        
+
         addSubview(renderView)
         renderView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
