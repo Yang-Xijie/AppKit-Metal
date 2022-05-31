@@ -23,7 +23,7 @@ class MainWindow: NSWindow {
                                     height: CGFloat(1.0))
         contentMinSize = NSSize(width: CONFIG.WINDOW.min_height * CONFIG.WINDOW.width_height_ratio,
                                 height: CONFIG.WINDOW.min_height)
-        // setting contentMaxSize instead of maxFullScreenContentSize will be better
+        // setting `contentMaxSize` instead of `maxFullScreenContentSize` is better
         if NSScreen.main!.frame.size.width / NSScreen.main!.frame.size.height >= CONFIG.WINDOW.width_height_ratio {
             contentMaxSize = NSSize(width: NSScreen.main!.frame.size.height * CONFIG.WINDOW.width_height_ratio,
                                     height: NSScreen.main!.frame.size.height)
@@ -35,6 +35,6 @@ class MainWindow: NSWindow {
 
     override func toggleFullScreen(_: Any?) {
         XCLog("Entered full screen.")
-        super.toggleFullScreen(self) // FIXME: pause rendering before enter full screen and continue rendering after full screen
+        super.toggleFullScreen(self) // FIXME: pause rendering before enter full screen and continue rendering after full screen, or there will be frame overlapping
     }
 }

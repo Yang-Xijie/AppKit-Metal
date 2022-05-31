@@ -32,7 +32,7 @@ class RenderView: MTKView {
 
         isPaused = false
         enableSetNeedsDisplay = false
-        preferredFramesPerSecond = 60
+        preferredFramesPerSecond = CONFIG.RENDER.default_fps
         autoResizeDrawable = true // 和机器的缩放比例相适应
     }
 }
