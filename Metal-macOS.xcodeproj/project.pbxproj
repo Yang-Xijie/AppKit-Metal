@@ -19,6 +19,8 @@
 		481D709A281BA21500109A3B /* RenderData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D7099281BA21500109A3B /* RenderData.swift */; };
 		481D709C281BA30400109A3B /* RenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481D709B281BA30400109A3B /* RenderView.swift */; };
 		48A701452845B8320047733C /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A701442845B8320047733C /* Configuration.swift */; };
+		48A701472845D2210047733C /* ErrorDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A701462845D2210047733C /* ErrorDescription.swift */; };
+		48A7014A2845D2D40047733C /* NSPoint+inNSRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A701492845D2D40047733C /* NSPoint+inNSRect.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		481D7099281BA21500109A3B /* RenderData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderData.swift; sourceTree = "<group>"; };
 		481D709B281BA30400109A3B /* RenderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderView.swift; sourceTree = "<group>"; };
 		48A701442845B8320047733C /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		48A701462845D2210047733C /* ErrorDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDescription.swift; sourceTree = "<group>"; };
+		48A701492845D2D40047733C /* NSPoint+inNSRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPoint+inNSRect.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +76,7 @@
 		481D7059281B908200109A3B /* Metal-macOS */ = {
 			isa = PBXGroup;
 			children = (
-				48A701442845B8320047733C /* Configuration.swift */,
+				48A701482845D2240047733C /* Constants */,
 				481D7088281B98E700109A3B /* App */,
 				481D7098281BA1FA00109A3B /* Data */,
 				481D708B281B990400109A3B /* Render */,
@@ -126,8 +130,18 @@
 			isa = PBXGroup;
 			children = (
 				481D708E281B990400109A3B /* Metal+buildRenderPipelineWith.swift */,
+				48A701492845D2D40047733C /* NSPoint+inNSRect.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		48A701482845D2240047733C /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				48A701442845B8320047733C /* Configuration.swift */,
+				48A701462845D2210047733C /* ErrorDescription.swift */,
+			);
+			path = Constants;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,8 +223,10 @@
 				481D7068281B919B00109A3B /* MainWindow.swift in Sources */,
 				481D706A281B91CA00109A3B /* MainView.swift in Sources */,
 				48A701452845B8320047733C /* Configuration.swift in Sources */,
+				48A701472845D2210047733C /* ErrorDescription.swift in Sources */,
 				481D7092281B990400109A3B /* RenderViewDelegate.swift in Sources */,
 				481D7093281B990400109A3B /* Shader_triangle.metal in Sources */,
+				48A7014A2845D2D40047733C /* NSPoint+inNSRect.swift in Sources */,
 				481D709A281BA21500109A3B /* RenderData.swift in Sources */,
 				481D705B281B908200109A3B /* AppDelegate.swift in Sources */,
 				481D709C281BA30400109A3B /* RenderView.swift in Sources */,
