@@ -24,8 +24,8 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         // 编译这两个shader为GPU可以直接执行的机器码 只需要编译一次
         pipelineState_triangle = try! buildRenderPipelineWith(
             device: renderView.device!, renderView: renderView,
-            vertexShaderName: "vertexShader_drawTriangles",
-            fragmentShadername: "fragmentShader_drawTriangles"
+            vertexShaderName: "vertexShader_triangle",
+            fragmentShadername: "fragmentShader_triangle"
         )
 
         // 分配需要CPU和GPU共享的内存空间
@@ -34,7 +34,7 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
                 // 这里只指定长度就够了 后面在每帧动态修改其中的数据
                 renderView.device!.makeBuffer(
                     // 注意一开始应该给够内存
-                    length: RenderData.shared.vertices.count * MemoryLayout<VertexIn>.stride,
+                    length: RENDER_DATA.triangles.vertices.count * MemoryLayout<Vertex2D>.stride,
                     options: [.storageModeShared]
                 )!
             )
@@ -65,12 +65,12 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         renderEncoder_triangle.setTriangleFillMode(.fill)
 
         // 从程序中取到需要渲染的数据
-        let currentBufferData_triangle = RenderData.shared.vertices
-        let vertexCount_triangle = RenderData.shared.vertices.count
+        let currentBufferData_triangle = RENDER_DATA.triangles.vertices
+        let vertexCount_triangle = RENDER_DATA.triangles.vertices.count
         // 拿到CPU和GPU共享的buffer的地址
         let currentBufferAddr_triangle = buffer_triangle[bufferIndex].contents()
         // 将数据装进共享内存
-        currentBufferAddr_triangle.initializeMemory(as: VertexIn.self, from: currentBufferData_triangle, count: vertexCount_triangle)
+        currentBufferAddr_triangle.initializeMemory(as: Vertex2D.self, from: currentBufferData_triangle, count: vertexCount_triangle)
         renderEncoder_triangle.setVertexBuffer(buffer_triangle[bufferIndex],
                                                offset: 0,
                                                index: 0)

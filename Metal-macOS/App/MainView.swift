@@ -34,7 +34,7 @@ class MainView: NSView {
             return
         }
 
-        XCLog("\(mousePoint) \(normalizedPosition(from: mousePoint))")
+        XCLog("\(normalizedPosition(from: mousePoint))")
     }
 
     override func rightMouseDown(with _: NSEvent) {
@@ -43,7 +43,7 @@ class MainView: NSView {
             return
         }
 
-        XCLog("\(mousePoint) \(normalizedPosition(from: mousePoint))")
+        XCLog("\(normalizedPosition(from: mousePoint))")
     }
 
     override func mouseMoved(with _: NSEvent) {
@@ -53,7 +53,7 @@ class MainView: NSView {
         }
 
         if mousePoint.isInside(rect: self.frame) {
-            XCLog("\(mousePoint) \(normalizedPosition(from: mousePoint))")
+            XCLog("\(normalizedPosition(from: mousePoint))")
         }
     }
 

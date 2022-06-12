@@ -7,7 +7,7 @@ typedef vector_float2 MetalPosition2;
 typedef vector_float4 MetalPosition4;
 typedef vector_float4 MetalRGBA;
 
-struct VertexIn {
+struct Vertex2D {
     MetalPosition2 position;
     MetalRGBA color;
 };
