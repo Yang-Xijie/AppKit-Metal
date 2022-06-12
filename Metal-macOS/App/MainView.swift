@@ -35,6 +35,8 @@ class MainView: NSView {
         }
 
         XCLog("\(normalizedPosition(from: mousePoint))")
+        RENDER_DATA.triangles_animated.append(contentsOf:
+            AnimatedTriangle.createFourSurroundingTriangles(center: normalizedPosition(from: mousePoint)))
     }
 
     override func rightMouseDown(with _: NSEvent) {

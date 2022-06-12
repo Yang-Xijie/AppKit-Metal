@@ -13,5 +13,9 @@ func buildRenderPipelineWith(device: MTLDevice,
         pipelineDescriptor.fragmentFunction = library.makeFunction(name: fragmentShadername)
     } else { fatalError() }
     pipelineDescriptor.colorAttachments[0].pixelFormat = renderView.colorPixelFormat
+        
+    pipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
+    pipelineDescriptor.colorAttachments[0].rgbBlendOperation = .add
+    pipelineDescriptor.colorAttachments[0].alphaBlendOperation = .add
     return try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
 }
