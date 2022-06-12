@@ -4,32 +4,36 @@ import MetalKit
 import XCLog
 
 class RenderViewDelegate: NSObject, MTKViewDelegate {
-    // MARK: members
+    // MARK: 通用
 
     private let commandQueue: MTLCommandQueue!
-    private let pipelineState_triangles: MTLRenderPipelineState
-    // flight
+
+    // flight: 一帧的时间内 CPU准备数据放到`buffer[n+1]` GPU运算使用`buffer[n]` 这样互不影响
     private let MAX_FRAMES_IN_FLIGHT = 3
-    private var vertexBufferIndex = 0
-    private var vertexBuffer: [MTLBuffer] = []
+    private var bufferIndex = 0
+
+    // MARK: 渲染管线 - 三角形
+
+    private let pipelineState_triangle: MTLRenderPipelineState
+    // CPU和GPU共享的内存
+    private var buffer_triangle: [MTLBuffer] = []
 
     init?(renderView: MTKView) {
-        // MARK: setup
-
         commandQueue = renderView.device!.makeCommandQueue()!
 
-        pipelineState_triangles = try! buildRenderPipelineWith(
-            device: renderView.device!, metalKitView: renderView,
-            vertexFuncName: "vertexShader_drawTriangles",
-            fragmentFuncName: "fragmentShader_drawTriangles"
+        // 编译这两个shader为GPU可以直接执行的机器码 只需要编译一次
+        pipelineState_triangle = try! buildRenderPipelineWith(
+            device: renderView.device!, renderView: renderView,
+            vertexShaderName: "vertexShader_drawTriangles",
+            fragmentShadername: "fragmentShader_drawTriangles"
         )
 
-        // MARK: preapare data
-
+        // 分配需要CPU和GPU共享的内存空间
         for _ in 0 ..< MAX_FRAMES_IN_FLIGHT {
-            // TODO: 这里应该给够内存 虽然刚刚好也是够
-            vertexBuffer.append(
+            buffer_triangle.append(
+                // 这里只指定长度就够了 后面在每帧动态修改其中的数据
                 renderView.device!.makeBuffer(
+                    // 注意一开始应该给够内存
                     length: RenderData.shared.vertices.count * MemoryLayout<VertexIn>.stride,
                     options: [.storageModeShared]
                 )!
@@ -40,38 +44,43 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
     // MARK: draw
 
     func draw(in renderView: MTKView) {
-        vertexBufferIndex = (vertexBufferIndex + 1) % MAX_FRAMES_IN_FLIGHT
+        // MARK: - 准备
 
-        // MARK: -
+        // flight
+        bufferIndex = (bufferIndex + 1) % MAX_FRAMES_IN_FLIGHT
 
-        guard let commandBuffer = commandQueue.makeCommandBuffer() else { return }
+        // MTLRenderPassDescriptor: A group of render targets that hold the results of a render pass.
+        // currentRenderPassDescriptor: Creates a render pass descriptor to draw into the current drawable.
+        let renderPassDescriptor = renderView.currentRenderPassDescriptor!
+        // white background
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0)
 
-        // MARK: -
+        let commandBuffer = commandQueue.makeCommandBuffer()!
 
-        // FIXME: 这一部分的代码每帧都要吗？感觉加载一下数据就可以了
-        guard let renderPassDescriptor = renderView.currentRenderPassDescriptor else { return }
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0) // white background
-        guard let renderEncoder_triangles = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+        // MARK: - 渲染一种类型的数据
 
-        renderEncoder_triangles.setRenderPipelineState(pipelineState_triangles)
-        renderEncoder_triangles.setTriangleFillMode(.fill)
+        // A MTLRenderCommandEncoder object provides methods to set up and perform a single graphics rendering pass.
+        let renderEncoder_triangle = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
+        renderEncoder_triangle.setRenderPipelineState(pipelineState_triangle)
+        renderEncoder_triangle.setTriangleFillMode(.fill)
 
-        // MARK: -
+        // 从程序中取到需要渲染的数据
+        let currentBufferData_triangle = RenderData.shared.vertices
+        let vertexCount_triangle = RenderData.shared.vertices.count
+        // 拿到CPU和GPU共享的buffer的地址
+        let currentBufferAddr_triangle = buffer_triangle[bufferIndex].contents()
+        // 将数据装进共享内存
+        currentBufferAddr_triangle.initializeMemory(as: VertexIn.self, from: currentBufferData_triangle, count: vertexCount_triangle)
+        renderEncoder_triangle.setVertexBuffer(buffer_triangle[bufferIndex],
+                                               offset: 0,
+                                               index: 0)
 
-        // FIXME: 如果输入的点不变的话其实是没必要更新的 如果点数要变的话 地址空间的大小也要变的
-        let currentVertexBufferAddr = vertexBuffer[vertexBufferIndex].contents()
-        let currentVertexBufferData = RenderData.shared.vertices
-        currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.vertices.count)
-        renderEncoder_triangles.setVertexBuffer(vertexBuffer[vertexBufferIndex],
-                                                offset: 0,
-                                                index: 0)
+        renderEncoder_triangle.drawPrimitives(type: .triangle,
+                                              vertexStart: 0,
+                                              vertexCount: vertexCount_triangle)
+        renderEncoder_triangle.endEncoding()
 
-        renderEncoder_triangles.drawPrimitives(type: .triangle,
-                                               vertexStart: 0,
-                                               vertexCount: RenderData.shared.vertices.count)
-        renderEncoder_triangles.endEncoding()
-
-        // MARK: -
+        // MARK: - 提交当前帧
 
         commandBuffer.present(renderView.currentDrawable!)
         commandBuffer.commit()
