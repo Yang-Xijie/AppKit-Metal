@@ -6,10 +6,8 @@ import XCLog
 class RenderViewDelegate: NSObject, MTKViewDelegate {
     // MARK: members
 
-    private let renderView: MTKView!
-    private let device: MTLDevice!
     private let commandQueue: MTLCommandQueue!
-    private let pipelineState: MTLRenderPipelineState
+    private let pipelineState_triangles: MTLRenderPipelineState
     // flight
     private let MAX_FRAMES_IN_FLIGHT = 3
     private var vertexBufferIndex = 0
@@ -18,32 +16,30 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
     init?(renderView: MTKView) {
         // MARK: setup
 
-        self.renderView = renderView
-        device = renderView.device!
-        commandQueue = device.makeCommandQueue()!
-        do {
-            pipelineState = try buildRenderPipelineWith(
-                device: device, metalKitView: renderView,
-                vertexFuncName: "vertexShader_drawTriangles",
-                fragmentFuncName: "fragmentShader_drawTriangles"
-            )
-        } catch {
-            XCLog(.fatal, "Unable to compile render pipeline state: \(error)")
-            fatalError()
-        }
+        commandQueue = renderView.device!.makeCommandQueue()!
+
+        pipelineState_triangles = try! buildRenderPipelineWith(
+            device: renderView.device!, metalKitView: renderView,
+            vertexFuncName: "vertexShader_drawTriangles",
+            fragmentFuncName: "fragmentShader_drawTriangles"
+        )
 
         // MARK: preapare data
 
         for _ in 0 ..< MAX_FRAMES_IN_FLIGHT {
             // TODO: 这里应该给够内存 虽然刚刚好也是够
             vertexBuffer.append(
-                device.makeBuffer(length: RenderData.shared.vertices.count * MemoryLayout<VertexIn>.stride)!)
+                renderView.device!.makeBuffer(
+                    length: RenderData.shared.vertices.count * MemoryLayout<VertexIn>.stride,
+                    options: [.storageModeShared]
+                )!
+            )
         }
     }
 
     // MARK: draw
 
-    func draw(in view: MTKView) {
+    func draw(in renderView: MTKView) {
         vertexBufferIndex = (vertexBufferIndex + 1) % MAX_FRAMES_IN_FLIGHT
 
         // MARK: -
@@ -53,12 +49,12 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         // MARK: -
 
         // FIXME: 这一部分的代码每帧都要吗？感觉加载一下数据就可以了
-        guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1, 1, 1, 1) // white background
-        guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+        guard let renderPassDescriptor = renderView.currentRenderPassDescriptor else { return }
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1.0, 1.0, 1.0, 1.0) // white background
+        guard let renderEncoder_triangles = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
 
-        renderEncoder.setRenderPipelineState(pipelineState)
-        renderEncoder.setTriangleFillMode(.fill)
+        renderEncoder_triangles.setRenderPipelineState(pipelineState_triangles)
+        renderEncoder_triangles.setTriangleFillMode(.fill)
 
         // MARK: -
 
@@ -66,18 +62,18 @@ class RenderViewDelegate: NSObject, MTKViewDelegate {
         let currentVertexBufferAddr = vertexBuffer[vertexBufferIndex].contents()
         let currentVertexBufferData = RenderData.shared.vertices
         currentVertexBufferAddr.initializeMemory(as: VertexIn.self, from: currentVertexBufferData, count: RenderData.shared.vertices.count)
-        renderEncoder.setVertexBuffer(vertexBuffer[vertexBufferIndex],
-                                      offset: 0,
-                                      index: 0)
+        renderEncoder_triangles.setVertexBuffer(vertexBuffer[vertexBufferIndex],
+                                                offset: 0,
+                                                index: 0)
 
-        renderEncoder.drawPrimitives(type: .triangle,
-                                     vertexStart: 0,
-                                     vertexCount: RenderData.shared.vertices.count)
-        renderEncoder.endEncoding()
+        renderEncoder_triangles.drawPrimitives(type: .triangle,
+                                               vertexStart: 0,
+                                               vertexCount: RenderData.shared.vertices.count)
+        renderEncoder_triangles.endEncoding()
 
         // MARK: -
 
-        commandBuffer.present(view.currentDrawable!)
+        commandBuffer.present(renderView.currentDrawable!)
         commandBuffer.commit()
     }
 
