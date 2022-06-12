@@ -43,6 +43,7 @@
 		481D709B281BA30400109A3B /* RenderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderView.swift; sourceTree = "<group>"; };
 		486688F02855D53E000266E6 /* Triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Triangle.swift; sourceTree = "<group>"; };
 		486688F22855D552000266E6 /* AnimatedTriangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedTriangle.swift; sourceTree = "<group>"; };
+		486688F62855E98F000266E6 /* project-settings.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "project-settings.md"; sourceTree = "<group>"; };
 		48A701442845B8320047733C /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		48A701462845D2210047733C /* ErrorDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDescription.swift; sourceTree = "<group>"; };
 		48A701492845D2D40047733C /* NSPoint+inNSRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPoint+inNSRect.swift"; sourceTree = "<group>"; };
@@ -67,7 +68,7 @@
 			children = (
 				48A7014B2845DA960047733C /* README.md */,
 				481D7097281BA18D00109A3B /* TODO.md */,
-				48A7014C2845DB1F0047733C /* Dcos */,
+				48A7014C2845DB1F0047733C /* Doc */,
 				481D7059281B908200109A3B /* Metal-macOS */,
 				481D7058281B908200109A3B /* Products */,
 			);
@@ -86,8 +87,8 @@
 			children = (
 				481D7088281B98E700109A3B /* App */,
 				481D7098281BA1FA00109A3B /* Data */,
-				481D708B281B990400109A3B /* Render */,
-				483096D628252BE1008ADE16 /* Extensions */,
+				481D708B281B990400109A3B /* Shader */,
+				483096D628252BE1008ADE16 /* Extension */,
 				481D7089281B98F000109A3B /* Bridge */,
 				481D705C281B908400109A3B /* Assets.xcassets */,
 				481D705E281B908400109A3B /* MainMenu.xib */,
@@ -116,13 +117,12 @@
 			path = Bridge;
 			sourceTree = "<group>";
 		};
-		481D708B281B990400109A3B /* Render */ = {
+		481D708B281B990400109A3B /* Shader */ = {
 			isa = PBXGroup;
 			children = (
-				481D708C281B990400109A3B /* ShaderDefinitions.h */,
 				481D7090281B990400109A3B /* Shader_triangle.metal */,
 			);
-			path = Render;
+			path = Shader;
 			sourceTree = "<group>";
 		};
 		481D7098281BA1FA00109A3B /* Data */ = {
@@ -135,13 +135,13 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		483096D628252BE1008ADE16 /* Extensions */ = {
+		483096D628252BE1008ADE16 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
 				481D708E281B990400109A3B /* Metal+buildRenderPipelineWith.swift */,
 				48A701492845D2D40047733C /* NSPoint+inNSRect.swift */,
 			);
-			path = Extensions;
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		486688F42855E7E0000266E6 /* RenderData */ = {
@@ -155,6 +155,7 @@
 		486688F52855E7E7000266E6 /* RenderStructure */ = {
 			isa = PBXGroup;
 			children = (
+				481D708C281B990400109A3B /* ShaderDefinitions.h */,
 				486688F02855D53E000266E6 /* Triangle.swift */,
 				486688F22855D552000266E6 /* AnimatedTriangle.swift */,
 			);
@@ -170,12 +171,13 @@
 			path = Constants;
 			sourceTree = "<group>";
 		};
-		48A7014C2845DB1F0047733C /* Dcos */ = {
+		48A7014C2845DB1F0047733C /* Doc */ = {
 			isa = PBXGroup;
 			children = (
 				48A7014D2845DB350047733C /* render-layers.md */,
+				486688F62855E98F000266E6 /* project-settings.md */,
 			);
-			path = Dcos;
+			path = Doc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -337,10 +339,13 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				MTL_HEADER_SEARCH_PATHS = "${PROJECT_NAME}/**";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/Bridge/Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -391,9 +396,12 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				MTL_HEADER_SEARCH_PATHS = "${PROJECT_NAME}/**";
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/Bridge/Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -420,8 +428,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yangxijie.Metal-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/Bridge/Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -448,8 +454,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yangxijie.Metal-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/Bridge/Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
